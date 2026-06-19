@@ -2,10 +2,8 @@ name: A股主板打新提醒
 
 on:
   schedule:
-    # 每周一到周五 北京时间 08:00 运行
-    # cron 使用 UTC 时间，北京+8小时，所以是 00:00 UTC
     - cron: '0 0 * * 1-5'
-  workflow_dispatch:  # 允许手动触发测试
+  workflow_dispatch:
 
 jobs:
   run:
@@ -21,9 +19,13 @@ jobs:
           python-version: '3.12'
 
       - name: 安装依赖
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt || pip install requests
 
       - name: 运行打新提醒脚本
         env:
           SENDKEY: ${{ secrets.SENDKEY }}
-        run: python ipo-alert/ipo_alert.py
+        run: |
+          SCRIPT=$(find . -name "ipo_alert.py" -type f | head -1)
+          echo "找到脚本: $SCRIPT"
+          cd "$(dirname "$SCRIPT")"
+          python ipo_alert.py
