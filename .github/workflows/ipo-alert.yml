@@ -26,4 +26,4 @@ jobs:
       - name: 运行打新提醒脚本
         env:
           SENDKEY: ${{ secrets.SENDKEY }}
-        run: python ipo_alert.py
+        run: python ipo-alert/ipo_alert.py
